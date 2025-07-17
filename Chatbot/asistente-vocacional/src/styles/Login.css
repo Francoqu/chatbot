@@ -1,0 +1,149 @@
+.login-main {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  font-family: "Poppins", sans-serif;
+}
+
+.login-left {
+  flex: 1;
+  overflow: hidden;
+}
+
+.login-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.login-right {
+  flex: 1;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-right-container {
+  width: 80%;
+  max-width: 400px;
+}
+
+.login-logo img {
+  width: 120px;
+  margin-bottom: 1.5rem;
+}
+
+.login-center h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: #000b64;
+}
+
+.login-center p {
+  margin-bottom: 1.5rem;
+  color: #555;
+}
+
+.login-message {
+  color: red;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+form input {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.pass-input-div {
+  position: relative;
+}
+
+.pass-input-div input {
+  padding-right: 2.5rem;
+}
+
+.pass-input-div svg {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #777;
+}
+
+.login-center-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.remember-div label {
+  margin-left: 0.5rem;
+}
+
+.forgot-pass-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  padding: 0;
+}
+
+.login-center-buttons button {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #000b64;
+  color: #fff;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.google-login {
+  background-color: #fff;
+  border: 1px solid #ccc;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.google-login img {
+  width: 20px;
+  margin-right: 0.5rem;
+}
+
+.login-center-buttons button:hover {
+  opacity: 0.9;
+}
+
+.login-bottom-p {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.login-bottom-p a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* opcional si quieres también centrar verticalmente */
+}
