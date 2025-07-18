@@ -3,7 +3,7 @@ import { auth, db } from "../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import Image from "../assets/osologin.jpg";
+import Image from "../assets/osolejos.jpg";
 import Logo from "../assets/logos.jpg";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import "../styles/Register.css";
