@@ -3,6 +3,11 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 import "../styles/chat.css";
+
+//borrar
+
+// adsd
+
 import {
   collection,
   addDoc,
@@ -320,9 +325,15 @@ export default function Chat() {
             >
               Ver carreras
             </li>
-            <li className="list-group-item list-group-item-dark" style={{ cursor: "pointer" }}>
-              Universidades
-            </li>
+            <li
+  className="list-group-item list-group-item-dark"
+  onClick={() => window.location.href = "http://localhost:3000/universidades"}
+  style={{ cursor: "pointer" }}
+>
+  Universidades
+</li>
+
+
           </ul>
 
           {showProfile && user && (
@@ -344,14 +355,18 @@ export default function Chat() {
                   <small>{user.email}</small>
                 </div>
               </div>
-              <button
+             <button 
                 className="btn btn-sm btn-outline-danger w-100"
-                onClick={handleLogout}
-              >
-                Cerrar sesión
-              </button>
+                onClick={() => {
+                window.location.href = "http://localhost:3000/";
+              }}
+            >
+              Cerrar sesión
+            </button>
+
             </div>
           )}
+          
         </div>
       </div>
     </div>

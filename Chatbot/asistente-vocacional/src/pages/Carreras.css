@@ -8,8 +8,8 @@
 html, body, #root {
   height: 100%;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #121212, #000000);
-  color: #ffffff;
+  background-color: #f5f7fa;   /* Gris muy claro, fondo limpio */
+  color: #1a1f36;              /* Azul muy oscuro para texto */
 }
 
 /* Contenedor principal - full screen flex column */
@@ -24,14 +24,15 @@ html, body, #root {
   display: flex;
   align-items: center;
   padding: 20px 40px;
-  background-color: #000000;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
-  color: #ffffff;
+  background-color: #283e6a;  /* Azul profesional medio */
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  color: #f0f4ff;             /* Blanco azulado suave */
   gap: 20px;
   flex-shrink: 0;
+  border-bottom: 1px solid #3f51b5; /* Azul brillante */
 }
 .logo {
-  width: 60px;  /* un poco más grande */
+  width: 60px;
   height: 60px;
   object-fit: contain;
 }
@@ -40,6 +41,7 @@ html, body, #root {
   font-size: 2rem;
   text-transform: uppercase;
   letter-spacing: 1.5px;
+  color: #f0f4ff;             /* Blanco azulado suave */
 }
 
 /* Contenido principal ocupa todo el espacio disponible */
@@ -50,6 +52,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  background-color: #ffffff;  /* Fondo blanco puro */
 }
 
 /* Buscador */
@@ -63,19 +66,19 @@ html, body, #root {
   padding: 14px 20px;
   font-size: 1.1rem;
   border-radius: 30px;
-  border: 2px solid #2c2f33;
+  border: 2px solid #9db4f5;  /* Azul claro */
   outline: none;
   transition: 0.3s ease;
-  box-shadow: 0 0 8px #2c2f33;
-  background-color: #1e1e1e;
-  color: #ffffff;
+  box-shadow: none;
+  background-color: #f5f7fa;   /* Gris muy claro */
+  color: #283e6a;              /* Azul medio */
 }
 .search-input::placeholder {
-  color: #888888;
+  color: #b0b8db;             /* Gris azulado suave */
 }
 .search-input:focus {
-  border-color: #505050;
-  box-shadow: 0 0 15px #505050;
+  border-color: #3f51b5;       /* Azul brillante */
+  box-shadow: 0 0 8px rgba(63,81,181,0.5);
 }
 
 /* Grid de tarjetas */
@@ -88,27 +91,28 @@ html, body, #root {
 
 /* Tarjetas */
 .card {
-  background-color: #2c2f33;
+  background-color: #ffffff;   /* blanco puro */
   border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e7eaf3;  /* gris muy claro */
 }
 .card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 35px rgba(50,50,50,0.9);
+  box-shadow: 0 20px 35px rgba(0,0,0,0.15);
 }
 .card-image {
   width: 100%;
-  height: 250px; /* más grande */
+  height: 250px;
   object-fit: cover;
-  filter: brightness(0.8);
+  filter: brightness(1);
   transition: filter 0.3s ease;
 }
 .card:hover .card-image {
-  filter: brightness(1);
+  filter: brightness(1.05);
 }
 
 /* Contenido de tarjeta */
@@ -118,12 +122,12 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: #ffffff;
+  color: #283e6a;             /* azul medio */
 }
 .card-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #c0c0c0;
+  color: #283e6a;             /* azul medio */
   margin-bottom: 12px;
   line-height: 1.2;
 }
@@ -131,12 +135,12 @@ html, body, #root {
 .card-universities {
   font-weight: 600;
   margin-bottom: 8px;
-  color: #999999;
+  color: #7a84a6;             /* gris azulado medio */
 }
 .card-description {
   flex-grow: 1;
   font-size: 1rem;
-  color: #dddddd;
+  color: #495057;             /* gris oscuro */
   margin-bottom: 15px;
   line-height: 1.4;
 }
@@ -144,26 +148,26 @@ html, body, #root {
 /* Botón más información */
 .btn-info {
   align-self: flex-start;
-  background-color: #212529;
-  color: #ffffff;
-  border: 2px solid #505050;
+  background-color: #283e6a;  /* azul medio */
+  color: #f0f4ff;             /* blanco azulado suave */
+  border: none;
   padding: 12px 25px;
   font-weight: 700;
   border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
-  box-shadow: 0 4px 10px rgba(33,37,41,0.7);
+  box-shadow: 0 4px 10px rgba(40,62,106,0.7);
 }
 .btn-info:hover:not(:disabled) {
-  background-color: #343a40;
-  color: #ffffff;
-  box-shadow: 0 6px 15px rgba(52,58,64,0.8);
+  background-color: #3f51b5;  /* azul brillante */
+  color: #f0f4ff;
+  box-shadow: 0 6px 15px rgba(63,81,181,0.8);
 }
 .btn-info:disabled {
-  background-color: #404040;
+  background-color: #7a84a6;  /* gris azulado */
   cursor: not-allowed;
   box-shadow: none;
-  color: #777777;
+  color: #e9ecef;
 }
 
 /* Mensaje sin resultados */
@@ -171,7 +175,7 @@ html, body, #root {
   grid-column: 1 / -1;
   text-align: center;
   font-size: 1.3rem;
-  color: #888888;
+  color: #7a84a6;             /* gris azulado medio */
   margin-top: 50px;
   font-weight: 600;
 }
@@ -180,14 +184,15 @@ html, body, #root {
 .footer {
   flex-shrink: 0;
   padding: 20px 40px;
-  background-color: #212529;
+  background-color: #f8f9fa;  /* gris muy claro */
   display: flex;
   justify-content: flex-start;
+  border-top: 1px solid #e0e0e0;
 }
 .btn-back {
   background-color: transparent;
-  border: 2px solid #c0c0c0;
-  color: #c0c0c0;
+  border: 2px solid #283e6a;  /* azul medio */
+  color: #283e6a;
   padding: 12px 28px;
   font-weight: 700;
   border-radius: 30px;
@@ -195,6 +200,6 @@ html, body, #root {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 .btn-back:hover {
-  background-color: #c0c0c0;
-  color: #212529;
+  background-color: #283e6a;  /* azul medio */
+  color: #f0f4ff;             /* blanco azulado suave */
 }
