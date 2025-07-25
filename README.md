@@ -26,7 +26,6 @@ Asistente Vocacional es una aplicación web interactiva que ayuda a los usuarios
 - CSS personalizado (`styles/chat.css`)
 
 
-
 ┼┼┼┼┼┼┼████
 ┼┼┼┼┼┼██████
 ┼┼┼┼┼████████
