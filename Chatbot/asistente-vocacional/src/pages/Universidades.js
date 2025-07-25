@@ -1,11 +1,15 @@
-// src/pages/Universidades.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../styles/universidades.css";
 
+import universidades from "../components/listaUniversidades";
+
+
+
+// Configurar iconos Leaflet por defecto
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -13,163 +17,32 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
 });
 
-// Datos de universidades (puedes expandir con más info si quieres)
-const universidades = [
-  {
-    nombre: "Universidad Central del Ecuador",
-    lat: -0.2115,
-    lng: -78.4915,
-    ciudad: "Quito",
-    tipo: "Pública",
-    descripcion: "Es la universidad más antigua del país y una de las más grandes, con una oferta académica variada en múltiples áreas del conocimiento.",
-  },
-  {
-    nombre: "Universidad Técnica Particular de Loja (UTPL)",
-    lat: -3.9939,
-    lng: -79.2044,
-    ciudad: "Loja",
-    tipo: "Privada",
-    descripcion: "Institución líder en educación a distancia en Ecuador, reconocida por su enfoque en innovación tecnológica y formación humanista.",
-  },
-  {
-    nombre: "ESPOL (Escuela Superior Politécnica del Litoral)",
-    lat: -2.1474,
-    lng: -79.9270,
-    ciudad: "Guayaquil",
-    tipo: "Pública",
-    descripcion: "Institución de prestigio especializada en ciencia, tecnología, ingeniería y matemáticas, con gran enfoque en investigación.",
-  },
-  {
-    nombre: "Universidad de las Américas (UDLA)",
-    lat: -0.1683,
-    lng: -78.4743,
-    ciudad: "Quito",
-    tipo: "Privada",
-    descripcion: "Universidad moderna con una fuerte presencia en comunicación, medicina, negocios y arquitectura.",
-  },
-  {
-    nombre: "Universidad San Francisco de Quito (USFQ)",
-    lat: -0.1620,
-    lng: -78.4935,
-    ciudad: "Quito (Cumbayá)",
-    tipo: "Privada",
-    descripcion: "Universidad liberal con fuerte énfasis en artes, ciencias sociales y biológicas, reconocida por su campus y enfoque internacional.",
-  },
-  {
-    nombre: "Universidad Técnica de Ambato (UTA)",
-    lat: -1.2510,
-    lng: -78.6164,
-    ciudad: "Ambato",
-    tipo: "Pública",
-    descripcion: "Institución regional con una sólida oferta en ingenierías, ciencias económicas y educación.",
-  },
-  {
-    nombre: "Escuela Politécnica Nacional (EPN)",
-    lat: -0.1869,
-    lng: -78.4874,
-    ciudad: "Quito",
-    tipo: "Pública",
-    descripcion: "Reconocida por su exigencia académica, especialmente en ingeniería y ciencias aplicadas.",
-  },
-  {
-    nombre: "Pontificia Universidad Católica del Ecuador (PUCE)",
-    lat: -0.1975,
-    lng: -78.4916,
-    ciudad: "Quito",
-    tipo: "Privada",
-    descripcion: "Una de las universidades más tradicionales del país, con enfoque humanista y católico, y gran variedad de carreras.",
-  },
-  {
-    nombre: "Universidad de Cuenca",
-    lat: -2.9005,
-    lng: -79.0043,
-    ciudad: "Cuenca",
-    tipo: "Pública",
-    descripcion: "Principal universidad de la región austral del país, destacada en áreas como arquitectura, salud y ciencias sociales.",
-  },
-  {
-    nombre: "Universidad Técnica del Norte (UTN)",
-    lat: 0.3439,
-    lng: -78.1223,
-    ciudad: "Ibarra",
-    tipo: "Pública",
-    descripcion: "Universidad clave del norte del país, con fuerte presencia en agroindustria, educación y tecnología.",
-  },
-  {
-    nombre: "Universidad Estatal de Milagro (UNEMI)",
-    lat: -2.1555,
-    lng: -79.6136,
-    ciudad: "Milagro",
-    tipo: "Pública",
-    descripcion: "Institución emergente con enfoque en educación superior inclusiva y desarrollo local.",
-  },
-  {
-    nombre: "Universidad Católica de Santiago de Guayaquil",
-    lat: -2.1950,
-    lng: -79.8885,
-    ciudad: "Guayaquil",
-    tipo: "Privada",
-    descripcion: "Universidad con enfoque cristiano-católico, destacada en carreras como derecho, medicina y psicología.",
-  },
-  {
-    nombre: "Universidad Politécnica Salesiana (UPS) - Quito",
-    lat: -0.1742,
-    lng: -78.4881,
-    ciudad: "Quito",
-    tipo: "Privada",
-    descripcion: "Institución salesiana con fuerte compromiso social y educativo en las áreas técnicas, sociales y humanísticas.",
-  },
-  {
-    nombre: "Universidad del Azuay",
-    lat: -2.9001,
-    lng: -78.9997,
-    ciudad: "Cuenca",
-    tipo: "Privada",
-    descripcion: "Universidad reconocida por su calidad académica en ingeniería, derecho y diseño.",
-  },
-  {
-    nombre: "Universidad Técnica Estatal de Quevedo",
-    lat: -1.0314,
-    lng: -79.4655,
-    ciudad: "Quevedo",
-    tipo: "Pública",
-    descripcion: "Importante institución en la región costera, especializada en agronomía, agroindustria y administración.",
-  },
-  {
-    nombre: "Universidad Nacional de Loja (UNL)",
-    lat: -3.9994,
-    lng: -79.2040,
-    ciudad: "Loja",
-    tipo: "Pública",
-    descripcion: "Una de las universidades más antiguas del sur del país, con fuerte enfoque en áreas sociales, jurídicas, económicas y de la salud.",
-  },
-  {
-    nombre: "Instituto Superior Tecnológico Daniel Álvarez Burneo",
-    lat: -4.0023,
-    lng: -79.2065,
-    ciudad: "Loja",
-    tipo: "Público",
-    descripcion: "Instituto de educación superior técnico-tecnológica que ofrece carreras prácticas orientadas al mercado laboral.",
-  },
-  {
-    nombre: "Instituto Superior Tecnológico Sudamericano",
-    lat: -3.9952,
-    lng: -79.1998,
-    ciudad: "Loja",
-    tipo: "Privado",
-    descripcion: "Institución técnica privada con programas modernos en administración, tecnología y comunicación.",
-  }
-];
+// Componente para mover el mapa al seleccionar universidad
+const MapaMover = ({ lat, lng }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (lat && lng) {
+      map.setView([lat, lng], 14);
+    }
+  }, [lat, lng, map]);
+  return null;
+};
 
 
 
 const Universidades = () => {
   const navigate = useNavigate();
   const [selectedUniversidad, setSelectedUniversidad] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleVolver = () => {
     navigate("/chat");
   };
+
+  // Filtrar universidades por nombre según searchTerm
+  const universidadesFiltradas = universidades.filter((u) =>
+    u.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="universidades-layout">
@@ -186,7 +59,7 @@ const Universidades = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {universidades.map((u, i) => (
+            {universidadesFiltradas.map((u, i) => (
               <Marker
                 key={i}
                 position={[u.lat, u.lng]}
@@ -199,6 +72,10 @@ const Universidades = () => {
                 <Popup>{u.nombre}</Popup>
               </Marker>
             ))}
+
+            {selectedUniversidad && (
+              <MapaMover lat={selectedUniversidad.lat} lng={selectedUniversidad.lng} />
+            )}
           </MapContainer>
         </div>
       </div>
@@ -210,15 +87,50 @@ const Universidades = () => {
             <p><strong>Ciudad:</strong> {selectedUniversidad.ciudad}</p>
             <p><strong>Tipo:</strong> {selectedUniversidad.tipo}</p>
             <p><strong>Descripción:</strong> {selectedUniversidad.descripcion}</p>
+            <p><strong>Año de fundación:</strong> {selectedUniversidad.fundacion || "No disponible"}</p>
+            <p><strong>Estudiantes:</strong> {selectedUniversidad.estudiantes ? selectedUniversidad.estudiantes.toLocaleString() : "No disponible"}</p>
+            {selectedUniversidad.principalesCarreras && selectedUniversidad.principalesCarreras.length > 0 && (
+              <p><strong>Principales carreras:</strong> {selectedUniversidad.principalesCarreras.join(", ")}</p>
+            )}
+            {selectedUniversidad.sitioWeb && (
+              <p>
+                <strong>Sitio web:</strong>{" "}
+                <a href={selectedUniversidad.sitioWeb} target="_blank" rel="noopener noreferrer">
+                  {selectedUniversidad.sitioWeb}
+                </a>
+              </p>
+            )}
           </div>
         ) : (
           <>
             <h2>Universidades del Ecuador</h2>
+            <input
+              type="text"
+              placeholder=" Buscar universidad..."
+              className="buscar-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
             <p>Selecciona una universidad en el mapa para ver más detalles.</p>
             <ul>
-              {universidades.map((u, i) => (
+              {universidadesFiltradas.map((u, i) => (
                 <li key={i} className="universidad-item">
                   {u.nombre}
+                  {selectedUniversidad && selectedUniversidad.nombre === u.nombre && (
+                    <div className="detalle-listado">
+                      <p><strong>Ciudad:</strong> {u.ciudad}</p>
+                      <p><strong>Tipo:</strong> {u.tipo}</p>
+                      <p><strong>Descripción:</strong> {u.descripcion}</p>
+                      <p><strong>Año de fundación:</strong> {u.fundacion || "No disponible"}</p>
+                      <p><strong>Estudiantes:</strong> {u.estudiantes ? u.estudiantes.toLocaleString() : "No disponible"}</p>
+                      {u.principalesCarreras && u.principalesCarreras.length > 0 && (
+                        <p><strong>Principales carreras:</strong> {u.principalesCarreras.join(", ")}</p>
+                      )}
+                      {u.sitioWeb && (
+                        <p><strong>Sitio web:</strong> <a href={u.sitioWeb} target="_blank" rel="noopener noreferrer">{u.sitioWeb}</a></p>
+                      )}
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

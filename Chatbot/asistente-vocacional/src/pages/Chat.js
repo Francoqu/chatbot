@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth, db } from "../firebase";
 import { v4 as uuidv4 } from "uuid";
 import "../styles/chat.css";
-
-//borrar
-
-// adsd
-
+import { db, auth } from "../firebase";
 import {
   collection,
   addDoc,
@@ -18,8 +13,10 @@ import {
 } from "firebase/firestore";
 import personaje from "../assets/personaje.png";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const socket = new WebSocket("ws://localhost:8090");
+
 const preguntas = [
   "¿Cuál es tu área de interés principal? (Ej: Ciencias, Arte, Tecnología, etc.)",
   "¿Prefieres trabajar con personas, datos o máquinas?",
@@ -40,7 +37,6 @@ export default function Chat() {
   const messageHandlerRef = useRef(null);
   const navigate = useNavigate();
 
-  // Guarda respuestas parciales y finales
   async function guardarRespuesta(userId, pregunta, respuesta) {
     if (!userId) return;
     try {
@@ -54,7 +50,61 @@ export default function Chat() {
     }
   }
 
-  // Guarda todo el chat como historial
+  async function sugerirCarrera(userId) {
+    try {
+      const respuestasRef = collection(db, "users", userId, "respuestasChat");
+      const snap = await getDocs(respuestasRef);
+
+      const respuestas = snap.docs.map(doc => {
+        const data = doc.data();
+        return `Pregunta: ${data.pregunta}\nRespuesta: ${data.respuesta}`;
+      }).join("\n\n");
+
+      const prompt = `
+Eres un orientador vocacional. Basado en las siguientes respuestas de un estudiante, sugiere 1 o 2 carreras profesionales adecuadas y explica brevemente por qué.
+
+${respuestas}
+
+Responde en español de forma clara y amigable.
+      `;
+
+      agregarMensaje({
+        content: "Analizando tus respuestas para darte una recomendación personalizada...",
+        role: "assistant",
+        id: uuidv4(),
+      });
+
+      const response = await axios.post(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+          },
+        }
+      );
+
+      const recomendacion = response.data.choices[0].message.content;
+      agregarMensaje({
+        content: recomendacion,
+        role: "assistant",
+        id: uuidv4(),
+      });
+    } catch (err) {
+      console.error("Error al obtener sugerencia:", err);
+      agregarMensaje({
+        content: "Hubo un error al obtener tu recomendación. Intenta más tarde.",
+        role: "assistant",
+        id: uuidv4(),
+      });
+    }
+  }
+
   const nuevoChat = async () => {
     if (!user || messages.length === 0) return;
     try {
@@ -70,7 +120,6 @@ export default function Chat() {
     }
   };
 
-  // Carga historial de chats previos
   const verHistorial = async () => {
     if (!user) return;
     const q = query(
@@ -87,7 +136,6 @@ export default function Chat() {
     setShowHistory(true);
   };
 
-  // Carga un chat histórico
   const handleVerChat = (chat) => {
     setMessages(chat.mensajes);
     setShowHistory(false);
@@ -114,6 +162,7 @@ export default function Chat() {
         setUser(null);
         setMessages([]);
         setPreguntaIndex(-1);
+        navigate("/login"); // Redirigir si no hay sesión
       }
     });
     return () => unsubscribe();
@@ -140,6 +189,7 @@ export default function Chat() {
         id: uuidv4(),
       });
       setPreguntaIndex(-1);
+      sugerirCarrera(user.uid);
     }
   }, [preguntaIndex]);
 
@@ -201,8 +251,7 @@ export default function Chat() {
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
-    setMessages([]);
-    setPreguntaIndex(-1);
+    navigate("/login");
   };
 
   return (
@@ -269,9 +318,7 @@ export default function Chat() {
                 </div>
               ))
             )}
-            {isLoading && (
-              <div className="text-muted small mt-2">Escribiendo...</div>
-            )}
+            {isLoading && <div className="text-muted small mt-2">Escribiendo...</div>}
             <div ref={messagesEndRef} />
           </div>
 
@@ -281,9 +328,7 @@ export default function Chat() {
                 type="text"
                 className="form-control bg-dark text-white border-secondary"
                 placeholder={
-                  preguntaIndex !== -1
-                    ? "Escribe tu respuesta..."
-                    : "Escribe tu mensaje..."
+                  preguntaIndex !== -1 ? "Escribe tu respuesta..." : "Escribe tu mensaje..."
                 }
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
@@ -304,41 +349,22 @@ export default function Chat() {
         <div className="col-3 d-flex flex-column position-relative p-4 options-panel">
           <h5>Opciones</h5>
           <ul className="list-group mt-3">
-            <li
-              className="list-group-item list-group-item-dark"
-              onClick={nuevoChat}
-              style={{ cursor: "pointer" }}
-            >
+            <li className="list-group-item list-group-item-dark" onClick={nuevoChat} style={{ cursor: "pointer" }}>
               Nuevo chat
             </li>
-            <li
-              className="list-group-item list-group-item-dark"
-              onClick={verHistorial}
-              style={{ cursor: "pointer" }}
-            >
+            <li className="list-group-item list-group-item-dark" onClick={verHistorial} style={{ cursor: "pointer" }}>
               Ver historial de chats
             </li>
-            <li
-              className="list-group-item list-group-item-dark"
-              onClick={() => navigate("/carreras")}
-              style={{ cursor: "pointer" }}
-            >
+            <li className="list-group-item list-group-item-dark" onClick={() => navigate("/carreras")} style={{ cursor: "pointer" }}>
               Ver carreras
             </li>
-            <li
-  className="list-group-item list-group-item-dark"
-  onClick={() => window.location.href = "http://localhost:3000/universidades"}
-  style={{ cursor: "pointer" }}
->
-  Universidades
-</li>
-
-
+            <li className="list-group-item list-group-item-dark" onClick={() => window.location.href = "https://chatbot-f02ad.web.app/universidades"} style={{ cursor: "pointer" }}>
+              Universidades
+            </li>
           </ul>
 
           {showProfile && user && (
-            <div
-              className="position-absolute bg-dark border rounded p-3 shadow text-white"
+            <div className="position-absolute bg-dark border rounded p-3 shadow text-white"
               style={{ bottom: 70, right: 20, width: 250, zIndex: 1000 }}
             >
               <div className="d-flex align-items-center gap-3 mb-3">
@@ -355,18 +381,11 @@ export default function Chat() {
                   <small>{user.email}</small>
                 </div>
               </div>
-             <button 
-                className="btn btn-sm btn-outline-danger w-100"
-                onClick={() => {
-                window.location.href = "http://localhost:3000/";
-              }}
-            >
-              Cerrar sesión
-            </button>
-
+              <button className="btn btn-sm btn-outline-danger w-100" onClick={handleLogout}>
+                Cerrar sesión
+              </button>
             </div>
           )}
-          
         </div>
       </div>
     </div>

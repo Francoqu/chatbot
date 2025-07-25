@@ -1,0 +1,24 @@
+.caw-icon-component-style > div{
+    width: 75px;
+    height: 75px;
+    line-height: 75px;
+    background-color: #fa738c;
+    -moz-box-sizing: content-box!important;
+    -webkit-box-sizing: content-box!important;
+    box-sizing: content-box!important;
+    text-align: center;
+}
+.caw-icon-component-style > div > i {
+    line-height: inherit;
+}
+
+/*Text alignment*/
+.caw-textcenter{
+  text-align: center;
+}
+.caw-textleft{
+  text-align: left;
+}
+.caw-textright{
+  text-align: right;
+}

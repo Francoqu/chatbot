@@ -34,6 +34,7 @@ async function guardarRespuesta(userId, pregunta, respuesta) {
 
 
 
+
 // Inicializar Firebase
 const app = initializeApp(firebaseConfig);
 
